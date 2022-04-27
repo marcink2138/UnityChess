@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6248528410784307588}
   - component: {fileID: 6248528410788576884}
   - component: {fileID: 4472354396108766865}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: King
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,3 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef5ff7bf71d04a7dbc890b6df9a7d185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xCord: 0
+  yCord: 0
+  teamType: 0
+  enemyTeamType: 0
+  chessPieceType: 0
+  beforeFirstMove: 0

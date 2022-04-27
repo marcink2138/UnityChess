@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4436913269326421575}
   - component: {fileID: 4436913269322207827}
   - component: {fileID: 6604794522475180221}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Pawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,3 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19bb3f48ccac4ba2a8c37c801b6b839d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xCord: 0
+  yCord: 0
+  teamType: 0
+  enemyTeamType: 0
+  chessPieceType: 0
+  beforeFirstMove: 0

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8216373231959396376}
   - component: {fileID: 8216373231954784856}
   - component: {fileID: -641331928172987001}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bishop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,3 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31e2e1bb2d5848f8bfbd475bbfa06526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xCord: 0
+  yCord: 0
+  teamType: 0
+  enemyTeamType: 0
+  chessPieceType: 0
+  beforeFirstMove: 0

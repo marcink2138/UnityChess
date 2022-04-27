@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7563712401917561523}
   - component: {fileID: 7563712401921899509}
   - component: {fileID: 5941014972199491290}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Rook
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,3 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d55decc6728248f4907220ec59d51b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xCord: 0
+  yCord: 0
+  teamType: 0
+  enemyTeamType: 0
+  chessPieceType: 0
+  beforeFirstMove: 0
