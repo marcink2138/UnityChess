@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using Code;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public abstract class Piece : MonoBehaviour{
     public int xCord;
     public int yCord;
     public TeamType teamType;
     public TeamType enemyTeamType;
-    public ChessPieceType chessPieceType;
+    [FormerlySerializedAs("chessPieceType")] public PieceType pieceType;
     public bool beforeFirstMove;
     public List<Move> possibleMoves = new List<Move>();
 

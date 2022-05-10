@@ -11,6 +11,7 @@
             CheckTopRight(board);
             CheckRight(board);
             CheckCastling(board);
+            MoveFinderHelper.CheckIfMoveIsAttackingKing(board, this);
         }
 
         private void CheckTop(Piece[,] board){
@@ -66,12 +67,12 @@
             if (xCord == 4 && yCord == y && beforeFirstMove){
                 if (board[xCord - 1, yCord] == null && board[xCord - 2, yCord] == null &&
                     board[xCord - 3, yCord] == null &&
-                    board[xCord - 4, yCord].chessPieceType.Equals(ChessPieceType.Rook)){
+                    board[xCord - 4, yCord].pieceType.Equals(PieceType.Rook)){
                     possibleMoves.Add(new Move(xCord - 2, yCord, MoveType.LongCastling));
                 }
 
                 if (board[xCord + 1, yCord] == null && board[xCord + 2, yCord] == null &&
-                    board[xCord + 3, yCord].chessPieceType.Equals(ChessPieceType.Rook)){
+                    board[xCord + 3, yCord].pieceType.Equals(PieceType.Rook)){
                     possibleMoves.Add(new Move(xCord + 2, yCord, MoveType.ShortCastling));
                 }
             }

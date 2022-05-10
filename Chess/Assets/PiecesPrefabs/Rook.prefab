@@ -115,5 +115,5 @@ MonoBehaviour:
   yCord: 0
   teamType: 0
   enemyTeamType: 0
-  chessPieceType: 0
+  pieceType: 0
   beforeFirstMove: 0

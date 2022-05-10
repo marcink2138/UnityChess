@@ -7,6 +7,7 @@
         LongCastling = 2,
         ShortCastling = 3,
         Promotion = 4,
-        Attack = 5
+        Attack = 5,
+        KingAttack = 6
     }
 }

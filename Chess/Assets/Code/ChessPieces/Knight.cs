@@ -6,6 +6,7 @@
             CheckBottomRight(board);
             CheckBottomLeft(board);
             CheckTopLeft(board);
+            MoveFinderHelper.CheckIfMoveIsAttackingKing(board, this);
         }
 
         private void CheckTopRight(Piece[,] board){

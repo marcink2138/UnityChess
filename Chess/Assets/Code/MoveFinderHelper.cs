@@ -114,5 +114,11 @@
                 piece.possibleMoves.Add(new Move(x, y, MoveType.Attack));
             }
         }
+
+        public static void CheckIfMoveIsAttackingKing(Piece[,] board, Piece piece){
+            piece.possibleMoves.FindAll(move => board[move.x, move.y] != null)
+                .FindAll(move => board[move.x, move.y].pieceType == PieceType.King)
+                .ForEach(move => move.MoveType = MoveType.KingAttack);
+        }
     }
 }

@@ -6,6 +6,7 @@
             MoveFinderHelper.BishopBottomRightCheck(board, this);
             MoveFinderHelper.BishopTopLeftCheck(board, this);
             MoveFinderHelper.BishopTopRightCheck(board, this);
+            MoveFinderHelper.CheckIfMoveIsAttackingKing(board, this);
         }
     }
 }
