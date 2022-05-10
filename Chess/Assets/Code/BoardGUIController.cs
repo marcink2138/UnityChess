@@ -57,7 +57,7 @@ namespace Code{
                 if (possibleMove.MoveType != MoveType.KingAttack){
                     fields[possibleMove.x, possibleMove.y].layer = LayerMask.NameToLayer("HighlightedField");
                     fields[possibleMove.x, possibleMove.y].GetComponent<MeshRenderer>().material =
-                        possibleMove.MoveType.Equals(MoveType.Attack)
+                        possibleMove.MoveType.Equals(MoveType.Attack) || possibleMove.MoveType==MoveType.EnPassant
                             ? fieldsMaterials[(int) FieldLayer.HighlightedAttackMaterial]
                             : fieldsMaterials[(int) FieldLayer.HighlightedField];
                     highlightedFields.Add(fields[possibleMove.x, possibleMove.y]);

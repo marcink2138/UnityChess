@@ -6,8 +6,6 @@ using UnityEngine;
 public class Board : MonoBehaviour{
     private Piece[,] board;
     private List<Piece> piecesList;
-    private int BOARD_X_SIZE = 8;
-    private int BOARD_Y_SIZE = 8;
     private Piece selectedPiece;
 
     private TeamType currentPlayer;
@@ -24,13 +22,9 @@ public class Board : MonoBehaviour{
     private void Awake(){
         board = new Piece[8, 8];
         GUIController = GetComponent<BoardGUIController>();
-        //fields = new GameObject[8, 8];
-        //highlightedFields = new List<GameObject>();
         piecesList = new List<Piece>();
         currentPlayer = TeamType.White;
         GUIController.FillBoardWithPieces(board, piecesList);
-        //GUIController.CreateFields(transform);
-        //CreateFields();
         GUIController.SetPiecesPosition(board);
         CheckMateDetector.CalculateAndRemoveIllegalMoves(board, piecesList, currentPlayer);
     }
@@ -63,16 +57,11 @@ public class Board : MonoBehaviour{
             var vector = GUIController.FindSelectedFieldCords(selectedField);
             if (Input.GetMouseButtonUp(0) && selectedPiece != null){
                 if (board[(int) vector.x, (int) vector.y] != null){
-                    piecesList.Remove(board[(int) vector.x, (int) vector.y]);
-                    Destroy(board[(int) vector.x, (int) vector.y].gameObject);
+                    DestroyPiece((int) vector.x, (int) vector.y);
                 }
 
-                if (!HandleCastling(vector)){
-                    board[(int) vector.x, (int) vector.y] = selectedPiece;
-                    board[selectedPiece.xCord, selectedPiece.yCord] = null;
-                    selectedPiece.SetCords((int) vector.x, (int) vector.y);
-                    selectedPiece.transform.position = GUIController.SetSinglePiecePosition(selectedPiece);
-                    selectedPiece.beforeFirstMove = false;
+                if (!HandleCastling(vector) && !HandleEnPassant(vector)){
+                    MovePieceTo(vector);
                 }
 
                 GUIController.UnHighlightFields();
@@ -90,6 +79,19 @@ public class Board : MonoBehaviour{
                 selectedPiece = null;
             }
         }
+    }
+
+    private void MovePieceTo(Vector2 vector){
+        board[(int) vector.x, (int) vector.y] = selectedPiece;
+        board[selectedPiece.xCord, selectedPiece.yCord] = null;
+        selectedPiece.SetCords((int) vector.x, (int) vector.y);
+        selectedPiece.transform.position = GUIController.SetSinglePiecePosition(selectedPiece);
+        selectedPiece.beforeFirstMove = false;
+    }
+
+    private void DestroyPiece(int x, int y){
+        piecesList.Remove(board[x, y]);
+        Destroy(board[x, y].gameObject);
     }
 
     private void ChangeCamera(){
@@ -129,34 +131,42 @@ public class Board : MonoBehaviour{
             var y = selectedPiece.teamType.Equals(TeamType.White) ? 0 : 7;
             var move = selectedPiece.FindMoveByCords((int) selectedFieldCords.x, (int) selectedFieldCords.y);
             if (move.MoveType.Equals(MoveType.ShortCastling)){
-                board[5, y] = board[7, y];
-                board[5, y].SetCords(5, y);
-                board[7, y] = null;
-                board[5, y].transform.position = GUIController.SetSinglePiecePosition(board[5, y]);
-                board[6, y] = board[4, y];
-                board[6, y].SetCords(6, y);
-                board[4, y] = null;
-                board[6, y].transform.position = GUIController.SetSinglePiecePosition(board[6, y]);
-                board[5, y].beforeFirstMove = false;
-                board[6, y].beforeFirstMove = false;
+                ChangePositionDuringCastling(5, 7, y);
+                ChangePositionDuringCastling(6, 4, y);
                 return true;
             }
 
             if (move.MoveType.Equals(MoveType.LongCastling)){
-                board[3, y] = board[0, y];
-                board[3, y].SetCords(3, y);
-                board[0, y] = null;
-                board[3, y].transform.position = GUIController.SetSinglePiecePosition(board[3, y]);
-                board[2, y] = board[4, y];
-                board[2, y].SetCords(2, y);
-                board[4, y] = null;
-                board[2, y].transform.position = GUIController.SetSinglePiecePosition(board[2, y]);
-                board[3, y].beforeFirstMove = false;
-                board[2, y].beforeFirstMove = false;
+                ChangePositionDuringCastling(3, 0, y);
+                ChangePositionDuringCastling(2, 4, y);
                 return true;
             }
         }
 
         return false;
+    }
+
+    private bool HandleEnPassant(Vector2 selectedFieldCords){
+        if (selectedPiece.pieceType == PieceType.Pawn){
+            var move = selectedPiece.FindMoveByCords((int) selectedFieldCords.x, (int) selectedFieldCords.y);
+            if (move.MoveType == MoveType.EnPassant){
+                var y = selectedPiece.teamType == TeamType.White
+                    ? (int) selectedFieldCords.y - 1
+                    : (int) selectedFieldCords.y + 1;
+                MovePieceTo(selectedFieldCords);
+                DestroyPiece((int) selectedFieldCords.x, y);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void ChangePositionDuringCastling(int toX, int fromX, int y){
+        board[toX, y] = board[fromX, y];
+        board[toX, y].SetCords(toX, y);
+        board[fromX, y] = null;
+        board[toX, y].transform.position = GUIController.SetSinglePiecePosition(board[toX, y]);
+        board[toX, y].beforeFirstMove = false;
     }
 }

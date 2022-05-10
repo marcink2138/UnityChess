@@ -123,6 +123,42 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &283167706 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6149240498234896668, guid: 62653201038943849865b87789190231, type: 3}
+  m_PrefabInstance: {fileID: 6149240498125057067}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &283167707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283167706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a177504d90945fd962f726481073bbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chessPiecesPrefabs:
+  - {fileID: 4436913269324185875, guid: 8f3ad85d629754c42be448aa6da0dad1, type: 3}
+  - {fileID: 3108861792331251422, guid: f8d2764d8235d134884e1d6a03b1328e, type: 3}
+  - {fileID: 8216373231956878618, guid: f4a650cef0dca51409bf365e6fabe9d4, type: 3}
+  - {fileID: 7563712401919860929, guid: 7f13c4e2f3dc52f4ea2348fd0dc1d42a, type: 3}
+  - {fileID: 8900464958655501880, guid: 210408e1e6f57d345b4132f87c3f49b7, type: 3}
+  - {fileID: 6248528410782390068, guid: bc111ef433262014d92039bc7b0a10d3, type: 3}
+  teamColors:
+  - {fileID: 2100000, guid: ef6b9293f3e7bc6488a9e68e9da98645, type: 2}
+  - {fileID: 2100000, guid: 4aaec0f972104fe40a910511a9325e1b, type: 2}
+  fieldsMaterials:
+  - {fileID: 2100000, guid: c6ca932a37cb16e4f99d15bb7bbec605, type: 2}
+  - {fileID: 2100000, guid: 0080fdf5e6b28e1468b7b35b9a19de23, type: 2}
+  - {fileID: 2100000, guid: 7c1fb08f3db54294b9d589dc1b7be01b, type: 2}
+  fieldXyShift: 0.75
+  fieldZShift: 0.001
+  pieceShiftX: 1.5
+  pieceShiftY: 1.5
+  fieldSizeScale: 1.5
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
