@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Code;
@@ -15,7 +16,21 @@ public class Board : MonoBehaviour{
     private Coroutine corutine;
     private BoardGUIController GUIController;
 
+    public GameObject promotionUI;
+    public GameObject endGameUI;
+    private bool isPromotionSelection;
+    private bool afterPromotion;
+
     void Update(){
+        if (isPromotionSelection){
+            return;
+        }
+
+        if (afterPromotion){
+            afterPromotion = false;
+            ChangeCurrentPlayerAndCalculateMoves();
+        }
+
         HandleHumanPlayerMove();
     }
 
@@ -37,6 +52,48 @@ public class Board : MonoBehaviour{
 
         var ray = _camera.ScreenPointToRay(Input.mousePosition);
         RaycastHit raycastHit;
+        PieceClicked(ray, out raycastHit);
+
+        if (Physics.Raycast(ray, out raycastHit, 200, LayerMask.GetMask("HighlightedField"))){
+            selectedField = raycastHit.transform.gameObject;
+            var vector = GUIController.FindSelectedFieldCords(selectedField);
+            if (!Input.GetMouseButtonUp(0) && selectedPiece == null){
+                return;
+            }
+
+            if (board[(int) vector.x, (int) vector.y] != null){
+                DestroyPiece((int) vector.x, (int) vector.y);
+            }
+
+            if (!HandleCastling(vector) && !HandleEnPassant(vector)){
+                MovePieceTo(vector);
+            }
+
+            isPromotionSelection = HandlePromotion(vector);
+            if (!isPromotionSelection){
+                ChangeCurrentPlayerAndCalculateMoves();
+            }
+
+            GUIController.UnHighlightFields();
+        }
+        else{
+            if (Input.GetMouseButtonUp(0) && selectedPiece != null){
+                GUIController.UnHighlightFields();
+                GUIController.PieceDown(selectedPiece);
+                selectedPiece = null;
+            }
+        }
+    }
+
+    private void ChangeCurrentPlayerAndCalculateMoves(){
+        selectedPiece = null;
+        currentPlayer = currentPlayer == TeamType.White ? TeamType.Black : TeamType.White;
+        CheckMateDetector.CalculateAndRemoveIllegalMoves(board, piecesList, currentPlayer);
+        HandleCheck();
+        HandleCheckMate();
+    }
+
+    private void PieceClicked(Ray ray, out RaycastHit raycastHit){
         if (Physics.Raycast(ray, out raycastHit, 200, LayerMask.GetMask("Field"))){
             selectedField = raycastHit.transform.gameObject;
             var vector2 = GUIController.FindSelectedFieldCords(selectedField);
@@ -51,34 +108,23 @@ public class Board : MonoBehaviour{
                 }
             }
         }
+    }
 
-        if (Physics.Raycast(ray, out raycastHit, 200, LayerMask.GetMask("HighlightedField"))){
-            selectedField = raycastHit.transform.gameObject;
-            var vector = GUIController.FindSelectedFieldCords(selectedField);
-            if (Input.GetMouseButtonUp(0) && selectedPiece != null){
-                if (board[(int) vector.x, (int) vector.y] != null){
-                    DestroyPiece((int) vector.x, (int) vector.y);
-                }
+    private void HandleCheck(){
+        Piece piece = CheckMateDetector.CheckDetection(piecesList, currentPlayer);
+        if (piece != null)
+            GUIController.SetMaterialOnCheckedField(currentPlayer, piece.xCord, piece.yCord);
+        else
+            GUIController.UnSetMaterialOnCheckedField(currentPlayer);
+    }
 
-                if (!HandleCastling(vector) && !HandleEnPassant(vector)){
-                    MovePieceTo(vector);
-                }
-
-                GUIController.UnHighlightFields();
-                selectedPiece = null;
-                currentPlayer = currentPlayer == TeamType.White ? TeamType.Black : TeamType.White;
-                CheckMateDetector.CalculateAndRemoveIllegalMoves(board, piecesList, currentPlayer);
-                CheckMateDetector.CheckMateDetection(piecesList, currentPlayer);
-                ChangeCamera();
-            }
+    private void HandleCheckMate(){
+        if (CheckMateDetector.CheckMateDetection(piecesList, currentPlayer)){
+            endGameUI.SetActive(true);
+            return;
         }
-        else{
-            if (Input.GetMouseButtonUp(0) && selectedPiece != null){
-                GUIController.UnHighlightFields();
-                GUIController.PieceDown(selectedPiece);
-                selectedPiece = null;
-            }
-        }
+
+        ChangeCamera();
     }
 
     private void MovePieceTo(Vector2 vector){
@@ -125,6 +171,31 @@ public class Board : MonoBehaviour{
         objectTransform.rotation = Quaternion.Euler(rotation);
     }
 
+    private bool HandlePromotion(Vector2 selectedFieldCords){
+        if (selectedPiece.pieceType == PieceType.Pawn){
+            var move = selectedPiece.FindMoveByCords((int) selectedFieldCords.x, (int) selectedFieldCords.y);
+            if (move.MoveType == MoveType.Promotion){
+                promotionUI.SetActive(true);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void GetPromotedPieceTypeFromGUI(String pieceTypeString){
+        PieceType pieceType = (PieceType) Enum.Parse(typeof(PieceType), pieceTypeString);
+        var x = selectedPiece.xCord;
+        var y = selectedPiece.yCord;
+        TeamType teamType = selectedPiece.teamType;
+        DestroyPiece(x, y);
+        board[x, y] = GUIController.CreateSinglePiece(pieceType, teamType, x, y, piecesList);
+        board[x, y].transform.position = GUIController.SetSinglePiecePosition(board[x, y]);
+        selectedPiece = null;
+        promotionUI.SetActive(false);
+        isPromotionSelection = false;
+        afterPromotion = true;
+    }
 
     private bool HandleCastling(Vector2 selectedFieldCords){
         if (selectedPiece.pieceType.Equals(PieceType.King) && selectedPiece.beforeFirstMove){

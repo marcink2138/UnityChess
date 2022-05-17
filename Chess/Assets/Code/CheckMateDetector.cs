@@ -5,7 +5,7 @@ namespace Code{
     public class CheckMateDetector{
         private CheckMateDetector(){ }
 
-        public static void CheckMateDetection(List<Piece> piecesList, TeamType currentPlayer){
+        public static bool CheckMateDetection(List<Piece> piecesList, TeamType currentPlayer){
             var currentPlayerPieces = piecesList.FindAll(piece => piece.teamType == currentPlayer);
             var flag = true;
             foreach (var piece in currentPlayerPieces){
@@ -18,6 +18,23 @@ namespace Code{
             if (flag){
                 Debug.Log("Przegrał gracz : " + currentPlayer);
             }
+
+            return flag;
+        }
+
+        public static Piece CheckDetection(List<Piece> piecesList, TeamType currentPlayer){
+            var enemyPlayerPieces = piecesList.FindAll(piece => piece.teamType != currentPlayer);
+            Piece currentPlayerKing =
+                piecesList.Find(piece => piece.pieceType == PieceType.King && piece.teamType == currentPlayer);
+            foreach (var piece in enemyPlayerPieces){
+                foreach (var move in piece.possibleMoves){
+                    if (move.x == currentPlayerKing.xCord && move.y == currentPlayerKing.yCord){
+                        return currentPlayerKing;
+                    }
+                }
+            }
+
+            return null;
         }
 
         public static void CalculateAndRemoveIllegalMoves(Piece[,] board, List<Piece> piecesList,
@@ -76,7 +93,8 @@ namespace Code{
         }
 
         private static void SimulateNormalMove(Piece piece, Piece[,] board, Move move, ref Piece attackedPiece){
-            if (move.MoveType == MoveType.Attack || move.MoveType == MoveType.Normal || move.MoveType == MoveType.Promotion){
+            if (move.MoveType == MoveType.Attack || move.MoveType == MoveType.Normal ||
+                move.MoveType == MoveType.Promotion){
                 attackedPiece = board[move.x, move.y];
                 board[move.x, move.y] = piece;
             }
@@ -91,7 +109,7 @@ namespace Code{
                             (move1.x == 5 && move1.y == y) || (move1.x == 6 && move1.y == y) ||
                             (move1.x == 4 && move1.y == y) || (move1.x == 3 && move1.y == y))
                         .Count > 0)
-                    .Count > 0;
+                .Count > 0;
         }
 
         private static bool CheckMoveLegality(Piece[,] board, List<Piece> enemyPieces){

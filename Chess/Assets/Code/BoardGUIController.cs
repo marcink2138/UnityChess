@@ -16,6 +16,8 @@ namespace Code{
         [SerializeField] private float pieceShiftX = 1.5f;
         [SerializeField] private float pieceShiftY = 1.5f;
         [SerializeField] private float fieldSizeScale = 0.15f;
+        private GameObject whiteCheckedField;
+        private GameObject blackCheckedField;
         private int BOARD_X_SIZE = 8;
         private int BOARD_Y_SIZE = 8;
 
@@ -25,7 +27,33 @@ namespace Code{
             CreateFields();
         }
 
-        public void CreateFields(){
+        public void SetMaterialOnCheckedField(TeamType teamType, int x, int y){
+            if (teamType == TeamType.White){
+                whiteCheckedField = fields[x, y];
+                whiteCheckedField.GetComponent<MeshRenderer>().material =
+                    fieldsMaterials[(int) FieldLayer.CheckMaterial];
+            }
+            else{
+                blackCheckedField = fields[x, y];
+                blackCheckedField.GetComponent<MeshRenderer>().material =
+                    fieldsMaterials[(int) FieldLayer.CheckMaterial];
+            }
+        }
+
+        public void UnSetMaterialOnCheckedField(TeamType teamType){
+            if (teamType == TeamType.White && whiteCheckedField != null){
+                whiteCheckedField.GetComponent<MeshRenderer>().material =
+                    fieldsMaterials[(int) FieldLayer.Field];
+                whiteCheckedField = null;
+            }
+            else if (blackCheckedField != null){
+                blackCheckedField.GetComponent<MeshRenderer>().material =
+                    fieldsMaterials[(int) FieldLayer.Field];
+                blackCheckedField = null;
+            }
+        }
+
+        private void CreateFields(){
             var bounds = new Vector3(fieldXyShift, 0, fieldXyShift);
             for (int x = 0; x < BOARD_X_SIZE; x++)
             for (int y = 0; y < BOARD_Y_SIZE; y++)
@@ -57,14 +85,14 @@ namespace Code{
                 if (possibleMove.MoveType != MoveType.KingAttack){
                     fields[possibleMove.x, possibleMove.y].layer = LayerMask.NameToLayer("HighlightedField");
                     fields[possibleMove.x, possibleMove.y].GetComponent<MeshRenderer>().material =
-                        possibleMove.MoveType.Equals(MoveType.Attack) || possibleMove.MoveType==MoveType.EnPassant
+                        possibleMove.MoveType.Equals(MoveType.Attack) || possibleMove.MoveType == MoveType.EnPassant
                             ? fieldsMaterials[(int) FieldLayer.HighlightedAttackMaterial]
                             : fieldsMaterials[(int) FieldLayer.HighlightedField];
                     highlightedFields.Add(fields[possibleMove.x, possibleMove.y]);
                 }
             }
         }
-        
+
         public void UnHighlightFields(){
             foreach (var highlightedField in highlightedFields){
                 highlightedField.layer = LayerMask.NameToLayer("Field");
@@ -73,7 +101,7 @@ namespace Code{
 
             highlightedFields.Clear();
         }
-        
+
         public Vector2 FindSelectedFieldCords(GameObject selectedField){
             for (int x = 0; x < BOARD_X_SIZE; x++){
                 for (int y = 0; y < BOARD_Y_SIZE; y++){
@@ -111,7 +139,7 @@ namespace Code{
             }
         }
 
-        private Piece CreateSinglePiece(PieceType pieceType, TeamType teamType, int x, int y, List<Piece> piecesList){
+        public Piece CreateSinglePiece(PieceType pieceType, TeamType teamType, int x, int y, List<Piece> piecesList){
             var piece = InstantiatePieceType(pieceType);
             piece.teamType = teamType;
             piece.pieceType = pieceType;
@@ -164,6 +192,7 @@ namespace Code{
 
             return piece;
         }
+
         public void SetPiecesPosition(Piece[,] board){
             for (var x = 0; x < BOARD_X_SIZE; x++){
                 for (var y = 0; y < BOARD_Y_SIZE; y++){

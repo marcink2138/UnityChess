@@ -160,7 +160,7 @@
         }
 
         private MoveType CheckWhitePromotion(MoveType moveType){
-            return xCord + 1 == 7 ? MoveType.Promotion : moveType;
+            return yCord + 1 == 7 ? MoveType.Promotion : moveType;
         }
     }
 }
