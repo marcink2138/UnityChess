@@ -26,6 +26,6 @@ public abstract class Piece : MonoBehaviour{
             }
         }
 
-        return new Move(-1, -1, MoveType.Normal);
+        return new Move(-1, -1, MoveType.Normal, pieceType);
     }
 }
