@@ -125,6 +125,7 @@ public class Board : MonoBehaviour{
             MovePieceTo(selectedFieldCords);
         }
 
+        HandleComputerPromotion(selectedFieldCords);
         ChangeCurrentPlayerAndCalculateMoves();
     }
 
@@ -253,6 +254,7 @@ public class Board : MonoBehaviour{
         selectedPiece.SetCords((int) vector.x, (int) vector.y);
         selectedPiece.transform.position = GUIController.SetSinglePiecePosition(selectedPiece);
         selectedPiece.beforeFirstMove = false;
+        selectedPiece.incrementNumberOfMoves();
         var move = selectedPiece.FindMoveByCords((int) vector.x, (int) vector.y);
         listOfMoves.Add(move);
         moveAudio.Play();
@@ -308,6 +310,23 @@ public class Board : MonoBehaviour{
         }
 
         return false;
+    }
+
+    private void HandleComputerPromotion(Vector2 selectedFieldCords){
+        if (selectedPiece.pieceType != PieceType.Pawn){
+            return;
+        }
+
+        var move = selectedPiece.FindMoveByCords((int) selectedFieldCords.x, (int) selectedFieldCords.y);
+        if (move.MoveType == MoveType.Promotion){
+            var x = (int) selectedFieldCords.x;
+            var y = (int) selectedFieldCords.y;
+            TeamType teamType = selectedPiece.teamType;
+            DestroyPiece(x, y);
+            board[x, y] = GUIController.CreateSinglePiece(PieceType.Queen, teamType, x, y, piecesList);
+            board[x, y].transform.position = GUIController.SetSinglePiecePosition(board[x, y]);
+            selectedPiece = null;
+        }
     }
 
     public void GetPromotedPieceTypeFromGUI(String pieceTypeString){

@@ -117,3 +117,4 @@ MonoBehaviour:
   enemyTeamType: 0
   pieceType: 0
   beforeFirstMove: 0
+  numberOfMoves: 0

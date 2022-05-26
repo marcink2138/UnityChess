@@ -77,7 +77,8 @@
                 if (xCord == 0){
                     if (board[xCord + 1, yCord - 1] != null){
                         if (board[xCord + 1, yCord - 1].teamType.Equals(enemyTeamType))
-                            possibleMoves.Add(new Move(xCord + 1, yCord - 1, CheckBlackPromotion(MoveType.Attack), pieceType));
+                            possibleMoves.Add(new Move(xCord + 1, yCord - 1, CheckBlackPromotion(MoveType.Attack),
+                                pieceType));
                     }
 
                     CheckRightEnPassant(board, TeamType.Black);
@@ -88,7 +89,8 @@
                 if (xCord == 7){
                     if (board[xCord - 1, yCord - 1] != null){
                         if (board[xCord - 1, yCord - 1].teamType.Equals(enemyTeamType))
-                            possibleMoves.Add(new Move(xCord - 1, yCord - 1, CheckBlackPromotion(MoveType.Attack), pieceType));
+                            possibleMoves.Add(new Move(xCord - 1, yCord - 1, CheckBlackPromotion(MoveType.Attack),
+                                pieceType));
                     }
 
                     CheckLeftEnPassant(board, TeamType.Black);
@@ -98,12 +100,14 @@
                 //Midlle
                 if (board[xCord - 1, yCord - 1] != null){
                     if (board[xCord - 1, yCord - 1].teamType.Equals(enemyTeamType))
-                        possibleMoves.Add(new Move(xCord - 1, yCord - 1, CheckBlackPromotion(MoveType.Attack), pieceType));
+                        possibleMoves.Add(new Move(xCord - 1, yCord - 1, CheckBlackPromotion(MoveType.Attack),
+                            pieceType));
                 }
 
                 if (board[xCord + 1, yCord - 1] != null){
                     if (board[xCord + 1, yCord - 1].teamType.Equals(enemyTeamType))
-                        possibleMoves.Add(new Move(xCord + 1, yCord - 1, CheckBlackPromotion(MoveType.Attack), pieceType));
+                        possibleMoves.Add(new Move(xCord + 1, yCord - 1, CheckBlackPromotion(MoveType.Attack),
+                            pieceType));
                 }
 
                 CheckRightEnPassant(board, TeamType.Black);
@@ -116,7 +120,8 @@
             if (teamType.Equals(TeamType.White)){
                 if (yCord == 4 && board[xCord + 1, yCord] != null){
                     if (board[xCord + 1, yCord].pieceType.Equals(PieceType.Pawn) &&
-                        board[xCord + 1, yCord].teamType.Equals(enemyTeamType)){
+                        board[xCord + 1, yCord].teamType.Equals(enemyTeamType) &&
+                        board[xCord + 1, yCord].numberOfMoves == 1){
                         if (board[xCord + 1, yCord + 1] == null)
                             possibleMoves.Add(new Move(xCord + 1, yCord + 1, MoveType.EnPassant, pieceType));
                     }
@@ -125,7 +130,8 @@
             else{
                 if (yCord == 3 && board[xCord + 1, yCord] != null){
                     if (board[xCord + 1, yCord].pieceType.Equals(PieceType.Pawn) &&
-                        board[xCord + 1, yCord].teamType.Equals(enemyTeamType)){
+                        board[xCord + 1, yCord].teamType.Equals(enemyTeamType) &&
+                        board[xCord + 1, yCord].numberOfMoves == 1){
                         if (board[xCord + 1, yCord - 1] == null)
                             possibleMoves.Add(new Move(xCord + 1, yCord - 1, MoveType.EnPassant, pieceType));
                     }
@@ -138,7 +144,8 @@
             if (teamType.Equals(TeamType.White)){
                 if (yCord == 4 && board[xCord - 1, yCord] != null){
                     if (board[xCord - 1, yCord].pieceType.Equals(PieceType.Pawn) &&
-                        board[xCord - 1, yCord].teamType.Equals(enemyTeamType)){
+                        board[xCord - 1, yCord].teamType.Equals(enemyTeamType) &&
+                        board[xCord - 1, yCord].numberOfMoves == 1){
                         if (board[xCord - 1, yCord + 1] == null)
                             possibleMoves.Add(new Move(xCord - 1, yCord + 1, MoveType.EnPassant, pieceType));
                     }
@@ -147,7 +154,8 @@
             else{
                 if (yCord == 3 && board[xCord - 1, yCord] != null){
                     if (board[xCord - 1, yCord].pieceType.Equals(PieceType.Pawn) &&
-                        board[xCord - 1, yCord].teamType.Equals(enemyTeamType)){
+                        board[xCord - 1, yCord].teamType.Equals(enemyTeamType) &&
+                        board[xCord - 1, yCord].numberOfMoves == 1){
                         if (board[xCord - 1, yCord + 1] == null)
                             possibleMoves.Add(new Move(xCord - 1, yCord - 1, MoveType.EnPassant, pieceType));
                     }

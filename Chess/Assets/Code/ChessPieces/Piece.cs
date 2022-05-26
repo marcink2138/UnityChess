@@ -8,9 +8,13 @@ public abstract class Piece : MonoBehaviour{
     public int yCord;
     public TeamType teamType;
     public TeamType enemyTeamType;
-    [FormerlySerializedAs("chessPieceType")] public PieceType pieceType;
+
+    [FormerlySerializedAs("chessPieceType")]
+    public PieceType pieceType;
+
     public bool beforeFirstMove;
     public List<Move> possibleMoves = new List<Move>();
+    public int numberOfMoves = 0;
 
     public void SetCords(int x, int y){
         xCord = x;
@@ -27,5 +31,9 @@ public abstract class Piece : MonoBehaviour{
         }
 
         return new Move(-1, -1, MoveType.Normal, pieceType);
+    }
+
+    public void incrementNumberOfMoves(){
+        numberOfMoves++;
     }
 }
