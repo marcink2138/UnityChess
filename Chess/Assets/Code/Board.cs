@@ -13,8 +13,9 @@ public class Board : MonoBehaviour{
     private Piece selectedPiece;
 
     private TeamType currentPlayer;
+    private TeamType humanPlayerTeamType;
 
-    private Camera _camera;
+    public Camera _camera;
     private GameObject selectedField;
     private Coroutine corutine;
     private BoardGUIController GUIController;
@@ -62,6 +63,7 @@ public class Board : MonoBehaviour{
         GUIController = GetComponent<BoardGUIController>();
         piecesList = new List<Piece>();
         currentPlayer = TeamType.White;
+        humanPlayerTeamType = MainMenuController.humanPlayerTeamType;
         GUIController.FillBoardWithPieces(board, piecesList);
         GUIController.SetPiecesPosition(board);
         CheckMateDetector.CalculateAndRemoveIllegalMoves(board, piecesList, currentPlayer);
@@ -71,9 +73,18 @@ public class Board : MonoBehaviour{
         isGameAgainstComputer = MainMenuController.isGameAgainstComputer;
         DisplayTime(whiteTimer, whitePlayerTimerText);
         DisplayTime(blackTimer, blackPlayerTimerText);
+        if (isGameAgainstComputer && humanPlayerTeamType == TeamType.Black){
+            //_camera = Camera.current;
+            _camera.transform.position = new Vector3(5, 15, 15.5f);
+            _camera.transform.rotation = Quaternion.Euler(new Vector3(50, 180, 0));
+        }
     }
 
     private void HandleHumanPlayerMove(){
+        if (isGameAgainstComputer && currentPlayer != humanPlayerTeamType){
+            return;
+        }
+
         if (_camera == null){
             _camera = Camera.current;
             return;
@@ -90,7 +101,7 @@ public class Board : MonoBehaviour{
     }
 
     private void HandleComputerPlayerMove(){
-        if (currentPlayer == TeamType.White){
+        if (currentPlayer == humanPlayerTeamType){
             return;
         }
 
@@ -112,8 +123,8 @@ public class Board : MonoBehaviour{
         isComputerThinking = false;
 
 
-        var blackPieces = piecesList.FindAll(piece => piece.teamType == TeamType.Black);
-        var computerMoveWrapper = AIPlayer.MakeMove(blackPieces);
+        var computerPieces = piecesList.FindAll(piece => piece.teamType != humanPlayerTeamType);
+        var computerMoveWrapper = AIPlayer.MakeMove(computerPieces);
         var pieceSelectedByAI = computerMoveWrapper.selectedPiece;
         selectedPiece = pieceSelectedByAI;
         var selectedFieldCords = computerMoveWrapper.selectedField;
@@ -126,6 +137,7 @@ public class Board : MonoBehaviour{
         }
 
         HandleComputerPromotion(selectedFieldCords);
+        GUIController.UnHighlightFields();
         ChangeCurrentPlayerAndCalculateMoves();
     }
 

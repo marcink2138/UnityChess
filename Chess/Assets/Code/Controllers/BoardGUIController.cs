@@ -41,7 +41,7 @@ namespace Code{
         }
 
         public void UnSetMaterialOnCheckedField(TeamType teamType){
-            if (teamType == TeamType.White && whiteCheckedField != null){
+            if (whiteCheckedField != null){
                 whiteCheckedField.GetComponent<MeshRenderer>().material =
                     fieldsMaterials[(int) FieldLayer.Field];
                 whiteCheckedField = null;
