@@ -67,13 +67,15 @@
             if (xCord == 4 && yCord == y && beforeFirstMove){
                 if (board[xCord - 1, yCord] == null && board[xCord - 2, yCord] == null &&
                     board[xCord - 3, yCord] == null &&
-                    board[xCord - 4, yCord].pieceType.Equals(PieceType.Rook)){
-                    possibleMoves.Add(new Move(xCord - 2, yCord, MoveType.LongCastling));
+                    board[xCord - 4, yCord] != null){
+                    if (board[xCord - 4, yCord].pieceType == PieceType.Rook && board[xCord - 4, yCord].beforeFirstMove)
+                        possibleMoves.Add(new Move(xCord - 2, yCord, MoveType.LongCastling, pieceType));
                 }
 
                 if (board[xCord + 1, yCord] == null && board[xCord + 2, yCord] == null &&
-                    board[xCord + 3, yCord].pieceType.Equals(PieceType.Rook)){
-                    possibleMoves.Add(new Move(xCord + 2, yCord, MoveType.ShortCastling));
+                    board[xCord + 3, yCord] != null){
+                    if (board[xCord + 3, yCord].pieceType.Equals(PieceType.Rook) && board[xCord + 3, yCord].beforeFirstMove)
+                        possibleMoves.Add(new Move(xCord + 2, yCord, MoveType.ShortCastling, pieceType));
                 }
             }
         }
